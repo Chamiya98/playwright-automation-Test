@@ -1,15 +1,10 @@
 {
-  "name": "exercise2",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {},
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "devDependencies": {
-    "@playwright/test": "^1.56.1",
-    "@types/node": "^24.10.1"
+  "scripts": {
+    "test:saucedemo": "playwright test tests/saucedemo",
+    "test:saucedemo:headed": "playwright test tests/saucedemo --headed",
+    "test:saucedemo:ui": "playwright test tests/saucedemo --ui",
+    "test:saucedemo:debug": "playwright test tests/saucedemo --debug",
+    "codegen:saucedemo": "playwright codegen https://www.saucedemo.com"
   }
+
 }
