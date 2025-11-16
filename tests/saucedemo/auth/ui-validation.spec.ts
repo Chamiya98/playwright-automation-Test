@@ -83,7 +83,7 @@ test.describe("SauceDemo - Login Tests", () => {
     await expect(passwordInput).toHaveValue("JayashanTest");
   });
 
-  test("should verify password masking properties2", async ({ page }) => {
+  test("should verify error message hidden once it's close", async ({ page }) => {
 
     //click login button 
     await page.locator('[data-test="login-button"]').click();
