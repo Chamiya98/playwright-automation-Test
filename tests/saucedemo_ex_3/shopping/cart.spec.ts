@@ -1,9 +1,10 @@
-import { test, expect} from "@playwright/test";
-import { loginAs, loginAsStandardUser } from '../auth/login.spec'
+import { test, expect } from "@playwright/test";
+import { loginAs, loginAsStandardUser } from "../auth/login.spec";
 
 test.describe("Shopping Cart - Valid Scenarios", () => {
   test("add single item to cart", async ({ page }) => {
     await loginAsStandardUser(page);
+
     // Add Sauce Labs Backpack to cart
     await page.locator('[data-test="add-to-cart-sauce-labs-backpack"]').click();
 
@@ -19,22 +20,28 @@ test.describe("Shopping Cart - Valid Scenarios", () => {
   });
 
   test("add multiple items to cart", async ({ page }) => {
-   await loginAsStandardUser(page);
+    await loginAsStandardUser(page);
+
     // By Id selector as an example
     await page.locator("#add-to-cart-sauce-labs-backpack").click();
 
     //By XPath selector as an example
-    await page.locator('xpath=//button[@name="add-to-cart-sauce-labs-bike-light"]') .click();
+    await page
+      .locator('xpath=//button[@name="add-to-cart-sauce-labs-bike-light"]')
+      .click();
 
-     //By CSS selector as an example
-    await page.locator('button[name="add-to-cart-sauce-labs-bolt-t-shirt"]').click();
+    //By CSS selector as an example
+    await page
+      .locator('button[name="add-to-cart-sauce-labs-bolt-t-shirt"]')
+      .click();
 
     // Verify cart badge shows 3 items
-    await expect(page.locator('[data-test="shopping-cart-badge"]')).toContainText("3");
+    await expect(
+      page.locator('[data-test="shopping-cart-badge"]')
+    ).toContainText("3");
   });
 
   test("remove item from cart", async ({ page }) => {
-    
     await loginAsStandardUser(page);
 
     // Add an item to cart
@@ -44,38 +51,54 @@ test.describe("Shopping Cart - Valid Scenarios", () => {
     await page.locator('[data-test="remove-sauce-labs-backpack"]').click();
 
     // Verify cart badge is not visible
-    await expect(page.locator('[data-test="shopping-cart-badge"]')).toHaveCount(0);
+    await expect(page.locator('[data-test="shopping-cart-badge"]')).toHaveCount(
+      0
+    );
 
     // Verify the button text changes back to "Add to cart"
-    await expect(page.locator('[data-test="add-to-cart-sauce-labs-backpack"]') ).toContainText("Add to cart");
+    await expect(
+      page.locator('[data-test="add-to-cart-sauce-labs-backpack"]')
+    ).toContainText("Add to cart");
   });
 
   test("verify cart contents after adding items", async ({ page }) => {
-   
-await loginAsStandardUser(page);
+    await loginAsStandardUser(page);
 
     // Add items to cart
     await page.locator('[data-test="add-to-cart-sauce-labs-backpack"]').click();
-    await page.locator('[data-test="add-to-cart-sauce-labs-bike-light"]').click();
+    await page
+      .locator('[data-test="add-to-cart-sauce-labs-bike-light"]')
+      .click();
 
     // Verify cart badge shows 2 items
-    await expect(page.locator('[data-test="shopping-cart-badge"]')).toContainText("2");
+    await expect(
+      page.locator('[data-test="shopping-cart-badge"]')
+    ).toContainText("2");
 
     // Navigate to cart
     await page.locator('[data-test="shopping-cart-link"]').click();
 
     // verify correct items are in the cart
-    await expect(page.locator('[data-test="item-4-title-link"] [data-test="inventory-item-name"]')).toContainText("Sauce Labs Backpack");
-    await expect(page.locator('[data-test="item-0-title-link"] [data-test="inventory-item-name"]')).toContainText("Sauce Labs Bike Light");
+    await expect(
+      page.locator(
+        '[data-test="item-4-title-link"] [data-test="inventory-item-name"]'
+      )
+    ).toContainText("Sauce Labs Backpack");
+    await expect(
+      page.locator(
+        '[data-test="item-0-title-link"] [data-test="inventory-item-name"]'
+      )
+    ).toContainText("Sauce Labs Bike Light");
   });
 
   test("verify cart is empty after removing all items", async ({ page }) => {
-    
     await loginAsStandardUser(page);
 
     // Add items to cart
     await page.locator('[data-test="add-to-cart-sauce-labs-backpack"]').click();
-    await page.locator('[data-test="add-to-cart-sauce-labs-bike-light"]').click();
+    await page
+      .locator('[data-test="add-to-cart-sauce-labs-bike-light"]')
+      .click();
 
     // Navigate to cart
     await page.locator('[data-test="shopping-cart-link"]').click();
@@ -85,11 +108,12 @@ await loginAsStandardUser(page);
     await page.locator('[data-test="remove-sauce-labs-bike-light"]').click();
 
     // Verify cart is empty
-    await expect(page.locator('[data-test="shopping-cart-badge"]')).toHaveCount(0);
+    await expect(page.locator('[data-test="shopping-cart-badge"]')).toHaveCount(
+      0
+    );
   });
 
   test("continue shopping from cart", async ({ page }) => {
-  
     await loginAsStandardUser(page);
 
     // Add an item to cart
@@ -106,7 +130,6 @@ await loginAsStandardUser(page);
   });
 
   test("cart persists  after navigating different page", async ({ page }) => {
-  
     await loginAsStandardUser(page);
     // Add an item to cart
     await page.locator('[data-test="add-to-cart-sauce-labs-backpack"]').click();
@@ -123,25 +146,33 @@ await loginAsStandardUser(page);
   });
 
   test("verify all items can be added to cart", async ({ page }) => {
-   
     await loginAsStandardUser(page);
 
     // Add all items to cart
     await page.locator('[data-test="add-to-cart-sauce-labs-backpack"]').click();
-    await page.locator('[data-test="add-to-cart-sauce-labs-bolt-t-shirt"]').click();
+    await page
+      .locator('[data-test="add-to-cart-sauce-labs-bolt-t-shirt"]')
+      .click();
     await page.locator('[data-test="add-to-cart-sauce-labs-onesie"]').click();
-    await page .locator('[data-test="add-to-cart-sauce-labs-bike-light"]').click();
-    await page.locator('[data-test="add-to-cart-sauce-labs-fleece-jacket"]').click();
-    await page.locator('[data-test="add-to-cart-test.allthethings()-t-shirt-(red)"]').click();
+    await page
+      .locator('[data-test="add-to-cart-sauce-labs-bike-light"]')
+      .click();
+    await page
+      .locator('[data-test="add-to-cart-sauce-labs-fleece-jacket"]')
+      .click();
+    await page
+      .locator('[data-test="add-to-cart-test.allthethings()-t-shirt-(red)"]')
+      .click();
 
     // Verify cart badge shows correct number of items
-    await expect(page.locator('[data-test="shopping-cart-badge"]')).toContainText("6");
+    await expect(
+      page.locator('[data-test="shopping-cart-badge"]')
+    ).toContainText("6");
   });
 });
 
 test.describe("Shopping Cart - Negative Scenarios", () => {
   test(" Cart without login", async ({ page }) => {
-
     // Attempt to navigate directly to cart page without logging in
     await page.goto("https://www.saucedemo.com/inventory.html");
 
@@ -164,7 +195,7 @@ test.describe("Shopping Cart - Negative Scenarios", () => {
   });
 
   test("invalid cart URL access", async ({ page }) => {
-     await loginAsStandardUser(page);
+    await loginAsStandardUser(page);
 
     // Try to access an invalid cart item (element that doesn't exist)
     const invalidItem = page.locator(
@@ -177,7 +208,6 @@ test.describe("Shopping Cart - Negative Scenarios", () => {
   });
 
   test("login as problem_user and add to cart", async ({ page }) => {
-
     // Login as problem_user
     await loginAs(page, "problem_user", "secret_sauce");
 
@@ -193,7 +223,6 @@ test.describe("Shopping Cart - Negative Scenarios", () => {
   });
 
   test("cart badge with zero items", async ({ page }) => {
-   
     await loginAsStandardUser(page);
 
     // Verify cart badge is not visible initially
