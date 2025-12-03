@@ -2,17 +2,19 @@ import { Locator, Page, expect } from "@playwright/test";
 
 export class ProductsPage {
   readonly page: Page;
-  readonly productsTitle: Locator;
   readonly productsCount: Locator;
+  readonly shoppingCartLink: Locator;
   readonly shoppingCartBadge: Locator;
+  readonly shoppingCartButton: Locator;
 
   constructor(page: Page) {
     this.page = page;
-    this.productsTitle = page.locator(".title");
-    this.shoppingCartBadge = page.locator('[data-test="shopping-cart-badge"]');
     this.productsCount = page.locator(".inventory_item");
+    this.shoppingCartLink = page.locator('[data-test="shopping-cart-link"]');
+    this.shoppingCartBadge = page.locator(".shopping_cart_badge");
+    this.shoppingCartButton = page.locator(".shopping_cart_link");
   }
-  
+
   async addProductToCartByName(productName: string) {
     await this.page.locator(`[data-test="add-to-cart-${productName}"]`).click();
   }
@@ -20,4 +22,24 @@ export class ProductsPage {
   async verifyProductCount(value: number) {
     await expect(this.productsCount).toHaveCount(value);
   }
+
+  async clickOnShoppingCart() {
+    await this.shoppingCartButton.click();
+  }
+
+  async addToCartByIndex(index: number) {
+    await this.productsCount
+      .nth(index)
+      .locator('button[data-test^="add-to-cart"]')
+      .click();
+  }
+
+  async removeFromCartByIndex(index: number) {
+    await this.productsCount
+      .nth(index)
+      .locator('button[data-test^="remove"]')
+      .click();
+  }
+
+  
 }

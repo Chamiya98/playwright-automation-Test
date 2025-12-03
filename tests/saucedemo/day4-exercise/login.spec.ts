@@ -45,7 +45,9 @@ test.describe("Login Test with fixture", () => {
     );
   });
 
-  test("should close error message on login failure.", async ({ loginPage }) => {
+  test("should close error message on login failure.", async ({
+    loginPage,
+  }) => {
     await loginPage.goto();
     await loginPage.login("invalid_user", "invalid_password");
     await loginPage.verifyLoginError(
