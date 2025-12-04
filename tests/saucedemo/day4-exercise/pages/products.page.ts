@@ -3,6 +3,7 @@ import { Locator, Page, expect } from "@playwright/test";
 export class ProductsPage {
   readonly page: Page;
   readonly productsCount: Locator;
+  readonly cartItems: Locator;
   readonly shoppingCartLink: Locator;
   readonly shoppingCartBadge: Locator;
   readonly shoppingCartButton: Locator;
@@ -10,6 +11,7 @@ export class ProductsPage {
   constructor(page: Page) {
     this.page = page;
     this.productsCount = page.locator(".inventory_item");
+    this.cartItems = page.locator(".cart_item");
     this.shoppingCartLink = page.locator('[data-test="shopping-cart-link"]');
     this.shoppingCartBadge = page.locator(".shopping_cart_badge");
     this.shoppingCartButton = page.locator(".shopping_cart_link");
@@ -34,12 +36,14 @@ export class ProductsPage {
       .click();
   }
 
+  async verifyCartItemCount(expectedCount: number) {
+    await expect(this.cartItems).toHaveCount(expectedCount);
+  }
+
   async removeFromCartByIndex(index: number) {
     await this.productsCount
       .nth(index)
       .locator('button[data-test^="remove"]')
       .click();
   }
-
-  
 }

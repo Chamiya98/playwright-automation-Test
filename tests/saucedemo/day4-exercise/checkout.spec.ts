@@ -1,15 +1,19 @@
 import { test, expect } from "./fixtures/saucedemo-fixtures";
+import { USERS, EXPECTED_RESULTS } from "./constants/testData";
+import { faker } from "@faker-js/faker";
+
+// Common setup before each test
+test.beforeEach(async ({ loginPage }) => {
+  await loginPage.goto();
+  await loginPage.login(USERS.VALID_USERNAME, USERS.VALID_PASSWORD);
+  await loginPage.verifySuccessfulLogin();
+});
 
 test.describe("should Single product checkout", () => {
   test("should login with valid credentials.", async ({
-    loginPage,
     productsPage,
     cartPage,
   }) => {
-    await loginPage.goto();
-    await loginPage.login("standard_user", "secret_sauce");
-    await loginPage.verifySuccessfulLogin();
-
     // Add a single product to the cart
     await productsPage.addToCartByIndex(0);
 
@@ -20,17 +24,16 @@ test.describe("should Single product checkout", () => {
     // Navigate to the cart page
     await productsPage.clickOnShoppingCart();
 
-    // Verify that the cart page shows 1 item
-    const cartItems = productsPage.page.locator(".cart_item");
-    await expect(cartItems).toHaveCount(1);
+    // Verify that the cart page shows 1 items
+    await productsPage.verifyCartItemCount(1);
 
     // Proceed to checkout
     await cartPage.checkoutButton.click();
 
     // Fill in checkout information
-    await cartPage.firstNameInput.fill("Jayashan");
-    await cartPage.lastNameInput.fill("Chamika");
-    await cartPage.postalCodeInput.fill("10900");
+    await cartPage.firstNameInput.fill(faker.person.firstName());
+    await cartPage.lastNameInput.fill(faker.person.lastName());
+    await cartPage.postalCodeInput.fill(faker.location.zipCode());
     await cartPage.continueButton.click();
 
     // Finish the checkout
@@ -38,22 +41,18 @@ test.describe("should Single product checkout", () => {
 
     // Verify that the order is complete
     await expect(cartPage.completeHeader).toBeVisible();
-    await expect(cartPage.completeHeader).toHaveText("Checkout: Complete!");
+    await expect(cartPage.completeHeader).toHaveText(
+      EXPECTED_RESULTS.CHECKOUT_COMPLETE_TITLE
+    );
     await expect(cartPage.thankYouMessage).toHaveText(
-      "Thank you for your order!"
+      EXPECTED_RESULTS.THANK_YOU_MESSAGE
     );
   });
 
   test("should Multiple products checkout.", async ({
-    loginPage,
     productsPage,
     cartPage,
   }) => {
-    // Login to the application
-    await loginPage.goto();
-    await loginPage.login("standard_user", "secret_sauce");
-    await loginPage.verifySuccessfulLogin();
-
     // Add two products to the cart
     await productsPage.addToCartByIndex(0);
     await productsPage.addToCartByIndex(1);
@@ -69,17 +68,18 @@ test.describe("should Single product checkout", () => {
     // Navigate to the cart page
     await productsPage.clickOnShoppingCart();
 
-    // Verify that the cart page shows 2 items
-    const cartItems = productsPage.page.locator(".cart_item");
-    await expect(cartItems).toHaveCount(6);
+    // Verify that the cart page shows 6 items
+    await productsPage.verifyCartItemCount(
+      EXPECTED_RESULTS.EXPECTED_PRODUCTS_COUNT
+    );
 
     // Proceed to checkout
     await cartPage.checkoutButton.click();
 
     // Fill in checkout information
-    await cartPage.firstNameInput.fill("Jayashan");
-    await cartPage.lastNameInput.fill("Chamika");
-    await cartPage.postalCodeInput.fill("10900");
+    await cartPage.firstNameInput.fill(faker.person.firstName());
+    await cartPage.lastNameInput.fill(faker.person.lastName());
+    await cartPage.postalCodeInput.fill(faker.location.zipCode());
     await cartPage.continueButton.click();
 
     // Finish the checkout
@@ -87,21 +87,17 @@ test.describe("should Single product checkout", () => {
 
     // Verify that the order is complete
     await expect(cartPage.completeHeader).toBeVisible();
-    await expect(cartPage.completeHeader).toHaveText("Checkout: Complete!");
+    await expect(cartPage.completeHeader).toHaveText(
+      EXPECTED_RESULTS.CHECKOUT_COMPLETE_TITLE
+    );
     await expect(cartPage.thankYouMessage).toHaveText(
-      "Thank you for your order!"
+      EXPECTED_RESULTS.THANK_YOU_MESSAGE
     );
   });
 
   test("should add and remove products from cart before checkout.", async ({
-    loginPage,
     productsPage,
   }) => {
-    // Login to the application
-    await loginPage.goto();
-    await loginPage.login("standard_user", "secret_sauce");
-    await loginPage.verifySuccessfulLogin();
-
     // Add two products to the cart
     await productsPage.addToCartByIndex(0);
     await productsPage.addToCartByIndex(1);
@@ -119,15 +115,9 @@ test.describe("should Single product checkout", () => {
   });
 
   test("should proceed with continue shopping navigation", async ({
-    loginPage,
     productsPage,
     cartPage,
   }) => {
-    // Login to the application
-    await loginPage.goto();
-    await loginPage.login("standard_user", "secret_sauce");
-    await loginPage.verifySuccessfulLogin();
-
     // Add a product to the cart
     await productsPage.addToCartByIndex(0);
 
@@ -138,9 +128,8 @@ test.describe("should Single product checkout", () => {
     // Navigate to the cart page
     await productsPage.clickOnShoppingCart();
 
-    // Verify that the cart page shows 1 item
-    const cartItems = productsPage.page.locator(".cart_item");
-    await expect(cartItems).toHaveCount(1);
+    // Verify that the cart page shows 1 items
+    await productsPage.verifyCartItemCount(1);
 
     // Click on Continue Shopping
     await cartPage.continueShoppingButton.click();

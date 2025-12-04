@@ -22,7 +22,9 @@ export class CartPage {
     this.finishButton = page.locator('[data-test="finish"]');
     this.completeHeader = page.locator('[data-test="title"]');
     this.thankYouMessage = page.locator('[data-test="complete-header"]');
-    this.continueShoppingButton = page.locator('[data-test="continue-shopping"]');
+    this.continueShoppingButton = page.locator(
+      '[data-test="continue-shopping"]'
+    );
   }
 
   async clickCheckoutButton() {

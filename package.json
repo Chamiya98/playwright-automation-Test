@@ -5,6 +5,9 @@
     "test:saucedemo:ui": "playwright test tests/saucedemo --ui",
     "test:saucedemo:debug": "playwright test tests/saucedemo --debug",
     "codegen:saucedemo": "playwright codegen https://www.saucedemo.com"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^10.1.0",
+    "@playwright/test": "^1.57.0"
   }
-
 }
