@@ -1,5 +1,9 @@
 import { test, expect } from "./fixtures/saucedemo-fixtures";
-import { USERS, ERROR_MESSAGES, EXPECTED_RESULTS } from "./constants/testData";
+import {
+  USERS,
+  EXPECTED_RESULTS,
+  NEGATIVE_LOGIN_SCENARIOS,
+} from "./constants/testData";
 
 test.describe("Login Test with fixture", () => {
   test("should login with valid credentials.", async ({ loginPage }) => {
@@ -20,40 +24,25 @@ test.describe("Login Test with fixture", () => {
     );
   });
 
-  test("should not login with empty username.", async ({ loginPage }) => {
-    await loginPage.goto();
-    await loginPage.login("", USERS.VALID_PASSWORD);
-    await loginPage.verifyLoginError(ERROR_MESSAGES.USERNAME_REQUIRED);
-  });
-
-  test("should not login with empty password.", async ({ loginPage }) => {
-    await loginPage.goto();
-    await loginPage.login(USERS.VALID_USERNAME, "");
-    await loginPage.verifyLoginError(ERROR_MESSAGES.PASSWORD_REQUIRED);
-  });
-
-  test("should not login with invalid credentials.", async ({ loginPage }) => {
-    await loginPage.goto();
-    await loginPage.login(USERS.INVALID_USERNAME, USERS.INVALID_PASSWORD);
-    await loginPage.verifyLoginError(ERROR_MESSAGES.INVALID_CREDENTIALS);
-  });
-
-  test("should not login with locked out user.", async ({ loginPage }) => {
-    await loginPage.goto();
-    await loginPage.login(USERS.LOCKED_OUT_USER, USERS.VALID_PASSWORD);
-    await loginPage.verifyLoginError(ERROR_MESSAGES.LOCKED_OUT);
-  });
+  // Parameterized negative login tests
+  NEGATIVE_LOGIN_SCENARIOS.forEach(
+    ({ description, username, password, expectedError }) => {
+      test(`should not login with ${description}`, async ({ loginPage }) => {
+        await loginPage.goto();
+        await loginPage.login(username, password);
+        await loginPage.verifyLoginError(expectedError);
+      });
+    }
+  );
 
   test("should close error message on login failure.", async ({
     loginPage,
   }) => {
     await loginPage.goto();
     await loginPage.login(USERS.INVALID_USERNAME, USERS.INVALID_PASSWORD);
-    await loginPage.verifyLoginError(ERROR_MESSAGES.INVALID_CREDENTIALS);
+    await loginPage.verifyLoginError(NEGATIVE_LOGIN_SCENARIOS[2].expectedError);
 
     await loginPage.closeError();
-
-    // Verify error message is closed
     await expect(loginPage.errorMessage).toHaveCount(0);
   });
 

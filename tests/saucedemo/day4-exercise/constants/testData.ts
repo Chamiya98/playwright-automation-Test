@@ -21,3 +21,30 @@ export const EXPECTED_RESULTS = {
   THANK_YOU_MESSAGE: "Thank you for your order!",
   CHECKOUT_COMPLETE_TITLE: "Checkout: Complete!",
 };
+
+export const NEGATIVE_LOGIN_SCENARIOS = [
+  {
+    description: "empty username",
+    username: "",
+    password: USERS.VALID_PASSWORD,
+    expectedError: ERROR_MESSAGES.USERNAME_REQUIRED,
+  },
+  {
+    description: "empty password",
+    username: USERS.VALID_USERNAME,
+    password: "",
+    expectedError: ERROR_MESSAGES.PASSWORD_REQUIRED,
+  },
+  {
+    description: "invalid credentials",
+    username: USERS.INVALID_USERNAME,
+    password: USERS.INVALID_PASSWORD,
+    expectedError: ERROR_MESSAGES.INVALID_CREDENTIALS,
+  },
+  {
+    description: "locked out user",
+    username: USERS.LOCKED_OUT_USER,
+    password: USERS.VALID_PASSWORD,
+    expectedError: ERROR_MESSAGES.LOCKED_OUT,
+  },
+];
